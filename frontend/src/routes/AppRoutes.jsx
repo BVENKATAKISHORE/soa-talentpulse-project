@@ -1,0 +1,103 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
+import MainLayout from '../layouts/MainLayout';
+import JobSeekerLayout from '../layouts/JobSeekerLayout';
+import RecruiterLayout from '../layouts/RecruiterLayout';
+import AdminLayout from '../layouts/AdminLayout';
+
+import Landing from '../pages/Landing';
+import Login from '../pages/auth/Login';
+import Register from '../pages/auth/Register';
+
+import Dashboard from '../pages/jobseeker/Dashboard';
+import Jobs from '../pages/jobseeker/Jobs';
+import JobDetails from '../pages/jobseeker/JobDetails';
+import MyApplications from '../pages/jobseeker/MyApplications';
+import ApplicationDetails from '../pages/jobseeker/ApplicationDetails';
+import Profile from '../pages/jobseeker/Profile';
+import EditProfile from '../pages/jobseeker/EditProfile';
+
+import RecruiterDashboard from '../pages/recruiter/RecruiterDashboard';
+import RecruiterProfile from '../pages/recruiter/RecruiterProfile';
+import ManageJobs from '../pages/recruiter/ManageJobs';
+import CreateJob from '../pages/recruiter/CreateJob';
+import EditJob from '../pages/recruiter/EditJob';
+import RecruiterJobDetails from '../pages/recruiter/RecruiterJobDetails';
+import Applicants from '../pages/recruiter/Applicants';
+import ApplicantDetails from '../pages/recruiter/ApplicantDetails';
+
+import AdminDashboard from '../pages/admin/AdminDashboard';
+import Users from '../pages/admin/Users';
+import UserDetails from '../pages/admin/UserDetails';
+import AdminJobs from '../pages/admin/AdminJobs';
+import AdminApplications from '../pages/admin/AdminApplications';
+import SystemOverview from '../pages/admin/SystemOverview';
+
+import ProtectedRoute from './ProtectedRoute';
+import RoleRoute from './RoleRoute';
+
+const AppRoutes = () => {
+  return (
+    <Routes>
+      {/* Public Landing Page */}
+      <Route path="/" element={<Landing />} />
+
+      {/* Public Authentication Routes using MainLayout */}
+      <Route element={<MainLayout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Route>
+
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
+        {/* Protected Job Seeker Portal Routes using JobSeekerLayout */}
+        <Route element={<RoleRoute allowedRoles={['JOB_SEEKER']} />}>
+          <Route element={<JobSeekerLayout />}>
+            <Route path="/job-seeker" element={<Navigate to="/job-seeker/dashboard" replace />} />
+            <Route path="/job-seeker/dashboard" element={<Dashboard />} />
+            <Route path="/jobs" element={<Jobs />} />
+            <Route path="/jobs/:id" element={<JobDetails />} />
+            <Route path="/job-seeker/jobs" element={<Navigate to="/jobs" replace />} />
+            <Route path="/job-seeker/jobs/:id" element={<JobDetails />} />
+            <Route path="/job-seeker/applications" element={<MyApplications />} />
+            <Route path="/job-seeker/applications/:id" element={<ApplicationDetails />} />
+            <Route path="/job-seeker/profile" element={<Profile />} />
+            <Route path="/job-seeker/profile/edit" element={<EditProfile />} />
+          </Route>
+        </Route>
+
+        {/* Protected Recruiter Workspace Routes using RecruiterLayout */}
+        <Route element={<RoleRoute allowedRoles={['RECRUITER']} />}>
+          <Route element={<RecruiterLayout />}>
+            <Route path="/recruiter" element={<Navigate to="/recruiter/dashboard" replace />} />
+            <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+            <Route path="/recruiter/jobs" element={<ManageJobs />} />
+            <Route path="/recruiter/jobs/create" element={<CreateJob />} />
+            <Route path="/recruiter/jobs/:id" element={<RecruiterJobDetails />} />
+            <Route path="/recruiter/jobs/edit/:id" element={<EditJob />} />
+            <Route path="/recruiter/applicants" element={<Applicants />} />
+            <Route path="/recruiter/applicants/:id" element={<ApplicantDetails />} />
+            <Route path="/recruiter/profile" element={<RecruiterProfile />} />
+          </Route>
+        </Route>
+
+        {/* Protected Admin Workspace Routes using AdminLayout */}
+        <Route element={<RoleRoute allowedRoles={['ADMIN']} />}>
+          <Route element={<AdminLayout />}>
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<Users />} />
+            <Route path="/admin/users/:id" element={<UserDetails />} />
+            <Route path="/admin/jobs" element={<AdminJobs />} />
+            <Route path="/admin/applications" element={<AdminApplications />} />
+            <Route path="/admin/system" element={<SystemOverview />} />
+          </Route>
+        </Route>
+      </Route>
+
+      {/* Fallback Route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
+
+export default AppRoutes;
